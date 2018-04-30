@@ -1,5 +1,6 @@
 package transactionssoftware;
 
+//Importing all needed libraries
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,6 +20,7 @@ public class TransactionsSoftware {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws FileNotFoundException, IOException, ParseException{
+        //Commands
         if(null == args[1]){
             //ERROR
             System.out.println("COMMAND NOT FOUND");
@@ -45,15 +47,18 @@ public class TransactionsSoftware {
                 break;
         }
     }
+    
+    //Add function that extracts all data from json
     static void Add(String amount, String description, String date, String id) throws FileNotFoundException, IOException, ParseException{
         // Adapting strings
         description=description.replace(",","");
         amount=amount.replace(",","");
         date=date.replace("date:","");
         date=date.replace(",","");
+        //Creating unique id for every transaction
         String transaction=UUID.randomUUID().toString();
 
-        // creating temporal JSONObject 
+        // creating temporal JSON with all data to store
         JSONObject jo = new JSONObject();
         // putting data to JSONObject
         jo.put("transaction_id", transaction);
@@ -64,14 +69,17 @@ public class TransactionsSoftware {
         String filename="";
         int currentid=0;
         boolean nuevo=false;
+        //Looking for json file to store data
         for(int i=0;true;i++){
             File fileTemp = new File(i+"File.json");
+            //If the file exist
             if(fileTemp.exists()){
                 currentid=i;
                 filename=i+"File.json";
                 if(currentid==0){
                     FileReader f = new FileReader(fileTemp);
                     BufferedReader b = new BufferedReader(f);
+                    //If the file is not empty
                     while(b.readLine()==null){
                         nuevo=true;
                         break;
@@ -82,26 +90,33 @@ public class TransactionsSoftware {
             }
             
         }
-        File file = new File(filename);
         
+        File file = new File(filename);
+        //If file exists, there is more than one json in the file and the file is not empty
         if(file.exists() && currentid>=0 && nuevo==false) {
             currentid++;
+            //Getting all jsons in the file
             Object obj = new JSONParser().parse(new FileReader(filename));
             JSONObject read = (JSONObject) obj;
+            //adding the new json to the jsons in the file
             read.put(currentid+"", jo);
             file.delete();
             PrintWriter pw = new PrintWriter(currentid+"File.json");
             pw.write(read.toJSONString());
             pw.flush();
             pw.close();
+            //Printing the current generated json
             System.out.println('{'+"\"transaction_id\": \""+transaction+"\", \"amount\": "+amount+", \"description\": \""+description+"\", \"date\":\""+date+"\", \"user_id\": "+id+'}');
         } else{
+            //If the file is empty 
             JSONObject finalJson = new JSONObject();
+            //Adding the json to the file
             finalJson.put("0",jo);
             PrintWriter pw = new PrintWriter("0File.json");
             pw.write(finalJson.toJSONString());
             pw.flush();
             pw.close();
+            //Printing json
             System.out.println('{'+"\"transaction_id\": \""+transaction+"\", \"amount\": "+amount+", \"description\": \""+description+"\", \"date\":\""+date+"\", \"user_id\": "+id+'}');
         }
         
@@ -110,6 +125,7 @@ public class TransactionsSoftware {
     static void Sum(String user_id) throws FileNotFoundException, IOException, ParseException{
         String filename;
         int flag;
+        //Looking for the file
         for(int i=0;true;i++){
             File fileTemp = new File(i+"File.json");
             if(fileTemp.exists()){
@@ -124,25 +140,27 @@ public class TransactionsSoftware {
                 break;
             }
         }
-        
+        //Getting all jsons in the file
         Object obj = new JSONParser().parse(new FileReader(filename));
         JSONObject read = (JSONObject) obj;
         double totalAmount=0;
         boolean exist=false;
-        for(int j=0;j<=flag;j++){
+        for(int j=0;j<=flag;j++){//going through all the jsons
             JSONObject temporal = (JSONObject) read.get(""+j);
             String id_temporal =(String) temporal.get("user_id");
-            if(id_temporal.equals(user_id)){
+            if(id_temporal.equals(user_id)){//If the json is from a specific user all the amounts are added
                 exist=true;
                 String amount= (String) temporal.get("amount");
                 double tempAmount=Double.parseDouble(amount);
                 totalAmount=totalAmount+tempAmount;
-            }else if(j==flag && exist==false){
+            }else if(j==flag && exist==false){//If we can not find transactions of an user
                 System.out.println("Transactions not found");
             }
         }
         System.out.println('{'+"\"user_id\": "+user_id+","+" \"sum\": "+totalAmount+'}');
     }
+    
+    //from now on all methods have the same logic just by changing the condition...
     
     static void List(String user_id) throws FileNotFoundException, IOException, ParseException{
         String filename;
