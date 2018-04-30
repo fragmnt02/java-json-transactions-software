@@ -1,4 +1,5 @@
-# java-json-transactions-software
+# Java-Json: Transactions Software
+
 
 ## Run software
 To run the application you need to follow next steps:
@@ -35,4 +36,6 @@ This command returns one transaction.
 ## Code
 To run code you need to meet two requirements:
 1. Add json-simple library to your project.
-2. Create an empty file named 0File.json in your project folder. 
+2. Create an empty file with the name 0File.json in your project folder.
+
+Note: All these files are included in the src folder.
