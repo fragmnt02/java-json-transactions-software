@@ -123,23 +123,9 @@ public class TransactionsSoftware {
     }
 
     static void Sum(String user_id) throws FileNotFoundException, IOException, ParseException{
-        String filename;
-        int flag;
-        //Looking for the file
-        for(int i=0;true;i++){
-            File fileTemp = new File(i+"File.json");
-            if(fileTemp.exists()){
-                flag=i;
-                filename=i+"File.json";
-                FileReader f = new FileReader(fileTemp);
-                BufferedReader b = new BufferedReader(f);
-                while(b.readLine()==null){
-                    System.out.println("There is no data");
-                    break;
-                }
-                break;
-            }
-        }
+        //Looking for the file and getting the number of last json index
+        int flag=lookFile();
+        String filename=flag+"File.json";
         //Getting all jsons in the file
         Object obj = new JSONParser().parse(new FileReader(filename));
         JSONObject read = (JSONObject) obj;
@@ -163,22 +149,8 @@ public class TransactionsSoftware {
     //from now on all methods have the same logic just by changing the condition...
     
     static void List(String user_id) throws FileNotFoundException, IOException, ParseException{
-        String filename;
-        int flag;
-        for(int i=0;true;i++){
-            File fileTemp = new File(i+"File.json");
-            if(fileTemp.exists()){
-                flag=i;
-                filename=i+"File.json";
-                FileReader f = new FileReader(fileTemp);
-                BufferedReader b = new BufferedReader(f);
-                while(b.readLine()==null){
-                    System.out.println("There is no data");
-                    break;
-                }
-                break;
-            }
-        }
+        int flag=lookFile();
+        String filename=flag+"File.json";
         
         Object obj = new JSONParser().parse(new FileReader(filename));
         JSONObject read = (JSONObject) obj;
@@ -202,22 +174,8 @@ public class TransactionsSoftware {
     }
     
     static void Show(String transaction_id) throws FileNotFoundException, IOException, ParseException{
-        String filename;
-        int flag;
-        for(int i=0;true;i++){
-            File fileTemp = new File(i+"File.json");
-            if(fileTemp.exists()){
-                flag=i;
-                filename=i+"File.json";
-                FileReader f = new FileReader(fileTemp);
-                BufferedReader b = new BufferedReader(f);
-                while(b.readLine()==null){
-                    System.out.println("There is no data");
-                    break;
-                }
-                break;
-            }
-        }
+        int flag=lookFile();
+        String filename=flag+"File.json";
         
         Object obj = new JSONParser().parse(new FileReader(filename));
         JSONObject read = (JSONObject) obj;
@@ -239,4 +197,21 @@ public class TransactionsSoftware {
         }
     }
     
+    static int lookFile() throws FileNotFoundException, IOException{
+        int flag=0;
+        for(int i=0;true;i++){
+            File fileTemp = new File(i+"File.json");
+            if(fileTemp.exists()){
+                flag=i;
+                FileReader f = new FileReader(fileTemp);
+                BufferedReader b = new BufferedReader(f);
+                while(b.readLine()==null){
+                    System.out.println("There is no data");
+                    break;
+                }
+                break;
+            }
+        }
+        return(flag);
+    }
 }
